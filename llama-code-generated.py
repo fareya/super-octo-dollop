@@ -17,7 +17,7 @@ for filename in os.listdir(data_path):
             code = file.read()
 
         client = OpenAI(
-        api_key = "LA-423ae285160e4c4f8cfb1e6f7d3b0c481ce796d67ba24010a9198a9d30632803",
+        api_key = "API",
         base_url = "https://api.llama-api.com")
 
         completion  = client.chat.completions.create(
