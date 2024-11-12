@@ -6,7 +6,7 @@ from openai import OpenAI
 
 
 data_path = '/Users/poojithapenta/Desktop/UMass/COMPSCI692/commented_data'
-output_path= '/Users/poojithapenta/Desktop/UMass/COMPSCI692/generated_code'
+output_path= '/Users/poojithapenta/Desktop/UMass/COMPSCI692/llama-generated_code'
 
 # Iterate over files in the directory
 for filename in os.listdir(data_path):
@@ -17,25 +17,27 @@ for filename in os.listdir(data_path):
             code = file.read()
 
         client = OpenAI(
-        api_key = "API",
+        api_key = "LA-423ae285160e4c4f8cfb1e6f7d3b0c481ce796d67ba24010a9198a9d30632803",
         base_url = "https://api.llama-api.com")
 
         completion  = client.chat.completions.create(
-        model="llama3.1-70b",
+        model="llama3.2-1b",
         messages=[
         {"role": "system", "content":  f"Please complete the TODO part in the code:\n\n{code}"}
-        ],)
+        ],
+        max_tokens=1000,)
         model_data = completion.model_dump()
-        commented_code=model_data['choices'][0]['message']
-        print(commented_code)
-      
-        break
-        # Optionally save response to a file or process further
-        output_file_path = os.path.join(output_path, f"{os.path.splitext(filename)[0]}_suggestions.py")
-        with open(output_file_path, 'w', encoding='utf-8') as output_file:
-            output_file.write(json.dumps(response_data, indent=2))
+        generated_code=model_data['choices'][0]['message']['content']
+
         
-        print(f"Processed {filename} and saved suggestions to {output_file_path}")
+        base_name = os.path.splitext(filename)[0]
+        new_file_path = os.path.join(output_path, f"{base_name}_generated.py")
+        
+        
+        with open(new_file_path, 'w', encoding='utf-8') as commented_file:
+            commented_file.write(generated_code)  
+        
+        print(f"Processed {filename} and saved suggestions to {new_file_path}")
 
 print("Done!")
 
